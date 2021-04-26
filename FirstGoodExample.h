@@ -25,13 +25,12 @@ void help() {
 	cout << "Call: my.avi" << endl;
 	cout << "Shows putting a pause button in a video." << endl;
 }
-int main() {
+int main(int argc, char** argv) {
 	cv::Mat frame; // To hold movie images
 	cv::VideoCapture g_capture;
 	help();
-	if (!g_capture.open(0)) {
-		cout << "Failed to open " << " video file\n" << endl;
-		cin.ignore();
+	if (argc < 2 || !g_capture.open(argv[1])) {
+		cout << "Failed to open " << argv[1] << " video file\n" << endl;
 		return -1;
 	}
 	// Name the main window

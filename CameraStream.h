@@ -1,4 +1,3 @@
-#pragma once
 #include <opencv2/opencv.hpp>
 #include <iostream>
 void my_mouse_callback(
@@ -36,18 +35,13 @@ int main(int argc, char* argv[]) {
 
 	//drawing function
 	box = cv::Rect(-1, -1, 0, 0);
-	cv::Mat image(200, 200, CV_8UC3), temp;
-	image.copyTo(temp);
-	box = cv::Rect(-1, -1, 0, 0);
-	image = cv::Scalar::all(0);
-	cv::namedWindow("Box Example");
 
 	cv::setMouseCallback(
-		"Box Example",
+		"Example2_11",
 		my_mouse_callback,
-		(void*)&image
+		(void*)&bgr_frame
 	);
-
+	std::vector<cv::Rect> boxVect;
 	for (;;) {//main loop
 		capture >> bgr_frame;// stream ctrl
 		if (bgr_frame.empty()) break; // end if done
@@ -64,9 +58,15 @@ int main(int argc, char* argv[]) {
 			false // true='origin at lower left'
 		);
 
-		image.copyTo(temp);
-		if (drawing_box) draw_box(temp, box);
-		cv::imshow("Box Example", temp);
+		//image.copyTo(bgr_frame);
+		//boxBuffer
+		if (drawing_box) {
+			boxVect.push_back(box);
+		}
+		for (cv::Rect& c : boxVect) {
+			draw_box(bgr_frame, c);
+		}
+		//cv::imshow("Box Example", temp);
 
 		cv::imshow("Example2_11", bgr_frame); //output1 bkg
 
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 			0 // Bits of radius to treat as fraction
 		);
 		if (rotation == 800) rotation = 0;
-		cv::flip(bgr_frame, bgr_frame, 1);//flip the output frame 180 h
+		//cv::flip(bgr_frame, bgr_frame, 1);//flip the output frame 180 h
 		imshow("Example2_11", bgr_frame);//Showing the circle
 
 		cv::logPolar(
